@@ -567,7 +567,10 @@ def not_found(e):
 @app.errorhandler(500)
 def server_error(e):
     return render_template("500.html"), 500
-
+print("\n========== REGISTERED ROUTES ==========")
+for rule in app.url_map.iter_rules():
+    print(rule)
+print("=======================================\n")
 
 # --------------------------------------------------------------------------
 # Entrypoint
