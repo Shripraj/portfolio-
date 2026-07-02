@@ -1,0 +1,25 @@
+<section class="section section-alt" id="skills">
+  <div class="container">
+    <p class="section-eyebrow" data-aos="fade-up">What I work with</p>
+    <h2 class="section-title" data-aos="fade-up">Technical <span class="gradient-text">Skills</span></h2>
+
+    <div class="skills-grid">
+      {% for category, items in skills_by_category.items() %}
+      <div class="skill-category glass" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 60 }}">
+        <h3 class="skill-cat-title">{{ category }}</h3>
+        {% for s in items %}
+        <div class="skill-row">
+          <div class="skill-row-head">
+            <span><i class="{{ s.icon|default('fa-solid fa-code') }}"></i> {{ s.name }}</span>
+            <span class="skill-pct">{{ s.proficiency }}%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-fill="{{ s.proficiency }}"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

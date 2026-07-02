@@ -1,0 +1,62 @@
+<section class="section" id="contact">
+  <div class="container">
+    <p class="section-eyebrow" data-aos="fade-up">Let's talk</p>
+    <h2 class="section-title" data-aos="fade-up">Get In <span class="gradient-text">Touch</span></h2>
+
+    <div class="contact-grid">
+      <div class="contact-info" data-aos="fade-right">
+        <div class="contact-info-card glass">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <span class="ci-label">Phone</span>
+            <span class="ci-value">{{ contact.phone }}</span>
+          </div>
+        </div>
+        <div class="contact-info-card glass">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <span class="ci-label">Email</span>
+            <span class="ci-value">{{ contact.email }}</span>
+          </div>
+        </div>
+        <div class="contact-info-card glass">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <span class="ci-label">Location</span>
+            <span class="ci-value">{{ contact.location }}</span>
+          </div>
+        </div>
+        <div class="contact-social">
+          <a href="{{ social.github }}" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a>
+          <a href="{{ social.linkedin }}" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="mailto:{{ social.email }}"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+
+      <form class="contact-form glass" id="contact-form" data-aos="fade-left" method="POST" action="{{ url_for('contact') }}">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="What's this about?">
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Tell me a bit about your project or opportunity..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fa-solid fa-paper-plane"></i> Send Message
+        </button>
+        <p class="form-status" id="form-status"></p>
+      </form>
+    </div>
+  </div>
+</section>

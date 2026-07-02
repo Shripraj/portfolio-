@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<div class="admin-header">
+  <h1>Manage Projects</h1>
+  <p>Add new project cards or remove existing ones.</p>
+</div>
+
+<div class="admin-panel glass">
+  <h2>Add Project</h2>
+  <form method="POST" enctype="multipart/form-data" class="admin-inline-form">
+    <input type="hidden" name="action" value="add">
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" name="title" required>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" rows="3" required></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Technologies (comma-separated)</label>
+        <input type="text" name="technologies" placeholder="Excel, Power BI" required>
+      </div>
+      <div class="form-group">
+        <label>Project Image</label>
+        <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp,.gif">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>View Project URL</label>
+        <input type="url" name="project_url" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>GitHub URL</label>
+        <input type="url" name="github_url" placeholder="https://github.com/...">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Project</button>
+  </form>
+</div>
+
+<div class="admin-panel glass">
+  <h2>Existing Projects</h2>
+  <table class="admin-table">
+    <thead><tr><th>Title</th><th>Technologies</th><th></th></tr></thead>
+    <tbody>
+      {% for p in projects %}
+      <tr>
+        <td>{{ p.title }}</td>
+        <td>{{ p.technologies }}</td>
+        <td>
+          <form method="POST" onsubmit="return confirm('Delete this project?');">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="project_id" value="{{ p.id }}">
+            <button type="submit" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

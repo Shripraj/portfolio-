@@ -1,0 +1,30 @@
+<section class="section section-alt" id="resume">
+  <div class="container">
+    <p class="section-eyebrow" data-aos="fade-up">My background, on paper</p>
+    <h2 class="section-title" data-aos="fade-up">Resume</h2>
+
+    <div class="resume-card glass" data-aos="fade-up">
+      <div class="resume-icon"><i class="fa-solid fa-file-pdf"></i></div>
+      <div class="resume-info">
+        <h3>{{ site_name }} — Resume</h3>
+        {% if resume %}
+        <p>Last updated {{ resume.uploaded_at.split(' ')[0] if resume.uploaded_at else '' }}</p>
+        {% else %}
+        <p>Resume coming soon — check back shortly.</p>
+        {% endif %}
+      </div>
+      <div class="resume-actions">
+        {% if resume %}
+        <a href="{{ url_for('resume_download') }}" target="_blank" class="btn btn-ghost">
+          <i class="fa-solid fa-eye"></i> Preview
+        </a>
+        <a href="{{ url_for('resume_download') }}" class="btn btn-primary">
+          <i class="fa-solid fa-download"></i> Download Resume
+        </a>
+        {% else %}
+        <span class="btn btn-primary btn-disabled"><i class="fa-solid fa-download"></i> Download Resume</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
