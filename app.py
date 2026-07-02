@@ -567,19 +567,14 @@ def not_found(e):
 @app.errorhandler(500)
 def server_error(e):
     return render_template("500.html"), 500
-print("\n========== REGISTERED ROUTES ==========")
-for rule in app.url_map.iter_rules():
-    print(rule)
-print("=======================================\n")
+
 
 # --------------------------------------------------------------------------
 # Entrypoint
 # --------------------------------------------------------------------------
 
+with app.app_context():
+    init_db()
+
 if __name__ == "__main__":
-    if not os.path.exists(app.config["DATABASE"]):
-        init_db()
-    else:
-        # Ensure schema/seed data exists even if db file already present
-        init_db()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True)
