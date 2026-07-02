@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+env/
+database/portfolio.db
+.env
+.DS_Store
+*.log
+static/images/certificates/*
+!static/images/certificates/.gitkeep
+static/images/projects/*
+!static/images/projects/.gitkeep
+static/resume/*
+!static/resume/.gitkeep

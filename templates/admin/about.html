@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<div class="admin-header">
+  <h1>Edit About Section</h1>
+  <p>Update your name, hero intro, and about paragraph shown on the public site.</p>
+</div>
+
+<div class="admin-panel glass">
+  <form method="POST">
+    <div class="form-group">
+      <label for="site_name">Display Name</label>
+      <input type="text" id="site_name" name="site_name" value="{{ site_name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="hero_intro">Hero Intro (short tagline under the typing effect)</label>
+      <textarea id="hero_intro" name="hero_intro" rows="3">{{ hero_intro }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="about_text">About Paragraph</label>
+      <textarea id="about_text" name="about_text" rows="6">{{ about_text }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+  </form>
+</div>
+{% endblock %}

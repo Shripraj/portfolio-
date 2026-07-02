@@ -1,0 +1,19 @@
+<section class="section" id="education">
+  <div class="container">
+    <p class="section-eyebrow" data-aos="fade-up">Academic path</p>
+    <h2 class="section-title" data-aos="fade-up">Education</h2>
+
+    <div class="timeline">
+      {% for e in education %}
+      <div class="timeline-item glass" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 80 }}">
+        <div class="timeline-marker"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="timeline-content">
+          <h3>{{ e.degree }}{% if e.field %} — {{ e.field }}{% endif %}</h3>
+          <p class="timeline-inst">{{ e.institution }}</p>
+          <p class="timeline-meta">{{ e.meta }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

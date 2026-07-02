@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="brand"><span class="brand-bracket">&lt;</span>Shridhar<span class="brand-bracket">/&gt;</span></a>
+
+    <nav class="nav-links" id="nav-links">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#certifications" class="nav-link">Certifications</a>
+      <a href="#education" class="nav-link">Education</a>
+      <a href="#resume" class="nav-link">Resume</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <button id="nav-burger" class="icon-btn nav-burger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile nav drawer -->
+<div class="nav-drawer" id="nav-drawer">
+  <a href="#home" class="nav-link">Home</a>
+  <a href="#about" class="nav-link">About</a>
+  <a href="#skills" class="nav-link">Skills</a>
+  <a href="#projects" class="nav-link">Projects</a>
+  <a href="#certifications" class="nav-link">Certifications</a>
+  <a href="#education" class="nav-link">Education</a>
+  <a href="#resume" class="nav-link">Resume</a>
+  <a href="#contact" class="nav-link">Contact</a>
+</div>
+<div class="nav-drawer-backdrop" id="nav-drawer-backdrop"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy" data-aos="fade-right" data-aos-duration="800">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> Available for opportunities</p>
+      <h1 class="hero-title">Hi, I'm <span class="gradient-text">{{ site_name }}</span></h1>
+      <div class="hero-typed-wrap">
+        <span class="hero-typed-prefix">$</span>
+        <span id="typed-text" class="hero-typed"></span><span class="typed-cursor">|</span>
+      </div>
+      <p class="hero-intro">{{ hero_intro }}</p>
+      <div class="hero-actions">
+        <a href="{{ url_for('resume_download') }}" class="btn btn-primary">
+          <i class="fa-solid fa-download"></i> Download Resume
+        </a>
+        <a href="#contact" class="btn btn-ghost">
+          <i class="fa-solid fa-paper-plane"></i> Contact Me
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" data-count="{{ projects|length }}">0</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-count="{{ certificates|length }}">0</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-count="16">0</span>
+          <span class="stat-label">Tech &amp; Tools</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual" data-aos="fade-left" data-aos-duration="800">
+      <div class="terminal-card glass">
+        <div class="terminal-head">
+          <span class="dot dot-red"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span>
+          <span class="terminal-title">shridhar@portfolio ~ </span>
+        </div>
+        <div class="terminal-body">
+          <div class="avatar-frame">
+            <img src="{{ url_for('static', filename='images/profile-placeholder.svg') }}" alt="Shridhar Patil" id="profile-photo">
+          </div>
+          <div class="terminal-lines">
+            <p><span class="tl-key">role</span> = <span class="tl-val">"Python Developer"</span></p>
+            <p><span class="tl-key">focus</span> = <span class="tl-val">"Data Analytics"</span></p>
+            <p><span class="tl-key">stack</span> = <span class="tl-val">["Flask", "SQL", "Power BI"]</span></p>
+            <p><span class="tl-key">status</span> = <span class="tl-ok">Open to work ✓</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#about" class="scroll-cue" aria-label="Scroll down"><i class="fa-solid fa-chevron-down"></i></a>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about">
+  <div class="container">
+    <p class="section-eyebrow" data-aos="fade-up">Get to know me</p>
+    <h2 class="section-title" data-aos="fade-up">About <span class="gradient-text">Me</span></h2>
+
+    <div class="about-grid">
+      <div class="about-copy" data-aos="fade-right">
+        <p>{{ about_text }}</p>
+        <p class="about-secondary">I enjoy the full loop of building software and making sense of data — from a Flask
+          backend serving real users, to a Power BI dashboard that helps a business make its next decision.</p>
+      </div>
+
+      <div class="about-cards" data-aos="fade-left">
+        <div class="about-card glass">
+          <i class="fa-solid fa-puzzle-piece"></i>
+          <h3>Problem Solving</h3>
+          <p>Breaking down ambiguous problems into clear, testable steps.</p>
+        </div>
+        <div class="about-card glass">
+          <i class="fa-solid fa-people-group"></i>
+          <h3>Team Collaboration</h3>
+          <p>Working well in teams, sharing context, and shipping together.</p>
+        </div>
+        <div class="about-card glass">
+          <i class="fa-solid fa-comments"></i>
+          <h3>Communication</h3>
+          <p>Explaining technical ideas clearly to technical and non-technical audiences.</p>
+        </div>
+        <div class="about-card glass">
+          <i class="fa-solid fa-hourglass-half"></i>
+          <h3>Time Management</h3>
+          <p>Prioritizing tasks and delivering on schedule without cutting corners.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block skills_section %}{% include "_skills.html" %}{% endblock %}
+{% block projects_section %}{% include "_projects.html" %}{% endblock %}
+{% block certifications_section %}{% include "_certifications.html" %}{% endblock %}
+{% block education_section %}{% include "_education.html" %}{% endblock %}
+{% block resume_section %}{% include "_resume.html" %}{% endblock %}
+{% block contact_section %}{% include "_contact.html" %}{% endblock %}
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <p>&copy; <span id="year"></span> {{ site_name }}. Built with Flask &amp; a lot of coffee.</p>
+    <div class="footer-social">
+      <a href="{{ social.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="{{ social.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a href="mailto:{{ social.email }}" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+  </div>
+</footer>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.PORTFOLIO_TITLES = {{ titles|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+<script src="{{ url_for('static', filename='js/typing.js') }}"></script>
+<script src="{{ url_for('static', filename='js/contact.js') }}"></script>
+{% endblock %}
