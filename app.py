@@ -304,6 +304,21 @@ def contact():
     flash("Thanks! Your message has been sent.", "success")
     return redirect(url_for("index", _anchor="contact"))
 
+@app.route("/resume/preview")
+def resume_preview():
+    db = get_db()
+    resume = db.execute(
+        "SELECT * FROM resume WHERE is_active = 1 ORDER BY uploaded_at DESC LIMIT 1"
+    ).fetchone()
+
+    if not resume:
+        abort(404)
+
+    return send_from_directory(
+        app.config["RESUME_UPLOAD_FOLDER"],
+        resume["filename"],
+        as_attachment=False   # Opens in browser
+    ) 
 
 @app.route("/resume/download")
 def resume_download():
@@ -311,13 +326,16 @@ def resume_download():
     resume = db.execute(
         "SELECT * FROM resume WHERE is_active = 1 ORDER BY uploaded_at DESC LIMIT 1"
     ).fetchone()
+
     if not resume:
         abort(404)
-    return send_from_directory(
-        app.config["RESUME_UPLOAD_FOLDER"], resume["filename"],
-        as_attachment=True, download_name="Shridhar_Patil_Resume.pdf",
-    )
 
+    return send_from_directory(
+        app.config["RESUME_UPLOAD_FOLDER"],
+        resume["filename"],
+        as_attachment=True,
+        download_name="Shridhar_Patil_Resume.pdf",
+    )
 
 @app.route("/certificates/<path:filename>")
 def certificate_file(filename):
