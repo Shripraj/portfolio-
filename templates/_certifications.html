@@ -19,7 +19,7 @@
           <p class="cert-date"><i class="fa-solid fa-calendar"></i> {{ c.completion_date }}</p>
           <div class="cert-actions">
             {% if c.certificate_url and c.certificate_url != '#' %}
-            <a href="{{ c.certificate_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
+            <a href="{{ url_for('certificate_file', filename=c.image) }}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
               <i class="fa-solid fa-eye"></i> View
             </a>
             {% else %}
