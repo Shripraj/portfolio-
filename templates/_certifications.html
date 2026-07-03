@@ -6,34 +6,68 @@
     <div class="cert-grid">
       {% for c in certificates %}
       <div class="cert-card glass" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 80 }}">
+
         <div class="cert-thumb">
           {% if c.image %}
-          <img src="{{ url_for('certificate_file', filename=c.image) }}" alt="{{ c.name }}">
+            <img src="{{ url_for('certificate_file', filename=c.image) }}" alt="{{ c.name }}">
           {% else %}
-          <div class="cert-thumb-placeholder"><i class="fa-solid fa-certificate"></i></div>
+            <div class="cert-thumb-placeholder">
+              <i class="fa-solid fa-certificate"></i>
+            </div>
           {% endif %}
         </div>
+
         <div class="cert-body">
           <h3>{{ c.name }}</h3>
-          <p class="cert-org"><i class="fa-solid fa-building"></i> {{ c.organization }}</p>
-          <p class="cert-date"><i class="fa-solid fa-calendar"></i> {{ c.completion_date }}</p>
+
+          <p class="cert-org">
+            <i class="fa-solid fa-building"></i>
+            {{ c.organization }}
+          </p>
+
+          <p class="cert-date">
+            <i class="fa-solid fa-calendar"></i>
+            {{ c.completion_date }}
+          </p>
+
           <div class="cert-actions">
-            {% if c.certificate_url and c.certificate_url != '#' %}
-            <a href="{{ url_for('certificate_file', filename=c.image) }}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
-              <i class="fa-solid fa-eye"></i> View
-            </a>
-            {% else %}
-            <span class="btn btn-sm btn-primary btn-disabled"><i class="fa-solid fa-eye"></i> View</span>
-            {% endif %}
+
             {% if c.image %}
-            <a href="{{ url_for('certificate_file', filename=c.image) }}" download class="btn btn-sm btn-ghost">
-              <i class="fa-solid fa-download"></i> Download
+
+            <!-- View Certificate -->
+            <a href="{{ url_for('certificate_file', filename=c.image) }}"
+               target="_blank"
+               rel="noopener"
+               class="btn btn-sm btn-primary">
+              <i class="fa-solid fa-eye"></i>
+              View
             </a>
+
+            <!-- Download Certificate -->
+            <a href="{{ url_for('certificate_file', filename=c.image) }}"
+               download="{{ c.name }}"
+               class="btn btn-sm btn-ghost">
+              <i class="fa-solid fa-download"></i>
+              Download
+            </a>
+
             {% else %}
-            <span class="btn btn-sm btn-ghost btn-disabled"><i class="fa-solid fa-download"></i> Download</span>
+
+            <button class="btn btn-sm btn-primary" disabled>
+              <i class="fa-solid fa-eye"></i>
+              View
+            </button>
+
+            <button class="btn btn-sm btn-ghost" disabled>
+              <i class="fa-solid fa-download"></i>
+              Download
+            </button>
+
             {% endif %}
+
           </div>
         </div>
+
       </div>
       {% endfor %}
     </div>
