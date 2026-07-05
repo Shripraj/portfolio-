@@ -3,45 +3,60 @@
     <p class="section-eyebrow" data-aos="fade-up">Selected work</p>
     <h2 class="section-title" data-aos="fade-up">Featured <span class="gradient-text">Projects</span></h2>
 
-    <div class="project-grid">
-      {% for p in projects %}
-      <div class="project-card glass" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 80 }}">
-        <div class="project-thumb">
-          {% if p.image %}
-          <img src="{{ url_for('static', filename='images/projects/' ~ p.image) }}" alt="{{ p.title }}">
-          {% else %}
-          <div class="project-thumb-placeholder">
-            <i class="fa-solid fa-chart-column"></i>
-          </div>
-          {% endif %}
-        </div>
-        <div class="project-body">
-          <h3>{{ p.title }}</h3>
-          <p>{{ p.description }}</p>
-          <div class="tech-tags">
-            {% for t in p.technologies.split(',') %}
-            <span class="tech-tag">{{ t.strip() }}</span>
-            {% endfor %}
-          </div>
-          <div class="project-actions">
-            {% if p.project_url and p.project_url != '#' %}
-            <a href="{{ p.project_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
-              <i class="fa-solid fa-eye"></i> View Project
-            </a>
-            {% else %}
-            <span class="btn btn-sm btn-primary btn-disabled"><i class="fa-solid fa-eye"></i> View Project</span>
-            {% endif %}
-            {% if p.github_url and p.github_url != '#' %}
-            <a href="{{ p.github_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-ghost">
-              <i class="fa-brands fa-github"></i> GitHub
-            </a>
-            {% else %}
-            <span class="btn btn-sm btn-ghost btn-disabled"><i class="fa-brands fa-github"></i> GitHub</span>
-            {% endif %}
-          </div>
-        </div>
-      </div>
+    {% if projects %}
+    <div class="project-filters" data-aos="fade-up">
+      <button class="filter-tab active" data-filter="all">All</button>
+      {% for category in project_categories %}
+      <button class="filter-tab" data-filter="{{ category|lower|replace(' ', '-') }}">{{ category }}</button>
       {% endfor %}
     </div>
+
+    <div class="project-grid" id="project-grid">
+      {% for category in project_categories %}
+        {% for p in projects_by_category[category] %}
+        <div class="project-card glass" data-category="{{ category|lower|replace(' ', '-') }}" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 4) * 80 }}">
+          <div class="project-thumb">
+            {% if p.image %}
+            <img src="{{ url_for('static', filename='images/projects/' ~ p.image) }}" alt="{{ p.title }}">
+            {% else %}
+            <div class="project-thumb-placeholder">
+              <i class="fa-solid fa-chart-column"></i>
+            </div>
+            {% endif %}
+            <span class="project-cat-badge">{{ category }}</span>
+          </div>
+          <div class="project-body">
+            <h3>{{ p.title }}</h3>
+            <p>{{ p.description }}</p>
+            <div class="tech-tags">
+              {% for t in p.technologies.split(',') %}
+              <span class="tech-tag">{{ t.strip() }}</span>
+              {% endfor %}
+            </div>
+            <div class="project-actions">
+              {% if p.project_url and p.project_url != '#' %}
+              <a href="{{ p.project_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">
+                <i class="fa-solid fa-eye"></i> View Project
+              </a>
+              {% else %}
+              <span class="btn btn-sm btn-primary btn-disabled"><i class="fa-solid fa-eye"></i> View Project</span>
+              {% endif %}
+              {% if p.github_url and p.github_url != '#' %}
+              <a href="{{ p.github_url }}" target="_blank" rel="noopener" class="btn btn-sm btn-ghost">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+              {% else %}
+              <span class="btn btn-sm btn-ghost btn-disabled"><i class="fa-brands fa-github"></i> GitHub</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <p class="project-empty-state" id="project-empty-state" style="display:none;">No projects in this category yet — check back soon.</p>
+    {% else %}
+    <p class="empty-state">Projects coming soon.</p>
+    {% endif %}
   </div>
 </section>

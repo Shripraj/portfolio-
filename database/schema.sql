@@ -69,3 +69,15 @@ CREATE TABLE IF NOT EXISTS messages (
     is_read INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    technologies TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'Data Analysis',
+    image TEXT,
+    project_url TEXT,
+    github_url TEXT,
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
