@@ -39,10 +39,13 @@
 .admin-inline-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .admin-inline-form .form-group { margin-bottom: 16px; }
 .admin-inline-form label { display: block; font-size: 12.5px; margin-bottom: 6px; color: var(--text-dim); }
-.admin-inline-form input, .admin-inline-form textarea, .admin-panel input, .admin-panel textarea {
+.admin-inline-form input, .admin-inline-form textarea, .admin-inline-form select,
+.admin-panel input, .admin-panel textarea, .admin-panel select {
   width: 100%; padding: 11px 14px; border-radius: var(--radius-sm);
   background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); font-size: 14px;
 }
+.admin-inline-form select, .admin-panel select { cursor: pointer; }
+html[data-theme="light"] .admin-inline-form select, html[data-theme="light"] .admin-panel select { background: rgba(255,255,255,0.7); }
 html[data-theme="light"] .admin-inline-form input, html[data-theme="light"] .admin-inline-form textarea,
 html[data-theme="light"] .admin-panel input, html[data-theme="light"] .admin-panel textarea { background: rgba(255,255,255,0.7); }
 .admin-inline-form input:focus, .admin-inline-form textarea:focus { border-color: var(--accent-cyan); outline: none; }

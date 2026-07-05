@@ -55,6 +55,15 @@ TITLES = [
     "Data Analyst",
 ]
 
+# Fixed project categories — used for the admin "group" dropdown and the
+# public filter tabs, so new projects automatically slot into the right group.
+PROJECT_CATEGORIES = [
+    "Data Analysis",
+    "Data Science",
+    "Machine Learning",
+    "Web Development",
+]
+
 # --------------------------------------------------------------------------
 # Database helpers
 # --------------------------------------------------------------------------
@@ -81,6 +90,13 @@ def init_db():
     db.row_factory = sqlite3.Row
     with open(app.config["SCHEMA"], "r") as f:
         db.executescript(f.read())
+
+    # --- Migration: add `category` column to projects if upgrading from an
+    # older database created before this feature existed ---
+    existing_cols = [row["name"] for row in db.execute("PRAGMA table_info(projects)").fetchall()]
+    if "category" not in existing_cols:
+        db.execute("ALTER TABLE projects ADD COLUMN category TEXT NOT NULL DEFAULT 'Data Analysis'")
+        db.commit()
 
     # Seed admin user
     cur = db.execute("SELECT COUNT(*) AS c FROM admin")
@@ -144,6 +160,7 @@ def init_db():
                 "Performed analysis on employee salary data using Excel and Power BI. "
                 "Created dashboards to identify pay inequality and business insights.",
                 "Excel, Power BI",
+                "Data Analysis",
                 None, "#", "https://github.com/Shripraj/Shridhar-Patil",
             ),
             (
@@ -151,14 +168,15 @@ def init_db():
                 "Analyzed retail business data using Excel and Power BI to identify revenue "
                 "trends, customer segments, and high-performing regions.",
                 "Excel, Power BI",
+                "Data Analysis",
                 None, "#", "https://github.com/Shripraj/Shridhar-Patil",
             ),
         ]
-        for i, (title, desc, tech, image, purl, gurl) in enumerate(projects):
+        for i, (title, desc, tech, category, image, purl, gurl) in enumerate(projects):
             db.execute(
-                """INSERT INTO projects (title, description, technologies, image, project_url, github_url, sort_order)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                (title, desc, tech, image, purl, gurl, i),
+                """INSERT INTO projects (title, description, technologies, category, image, project_url, github_url, sort_order)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (title, desc, tech, category, image, purl, gurl, i),
             )
 
     # Seed certificates
@@ -245,6 +263,14 @@ def index():
         skills_by_category.setdefault(row["category"], []).append(row)
 
     projects = db.execute("SELECT * FROM projects ORDER BY sort_order, id").fetchall()
+    projects_by_category = {}
+    for p in projects:
+        projects_by_category.setdefault(p["category"], []).append(p)
+    # Keep a stable, predictable tab order: fixed categories first, then any
+    # custom category an admin might type in later, in first-seen order.
+    category_order = [c for c in PROJECT_CATEGORIES if c in projects_by_category]
+    category_order += [c for c in projects_by_category if c not in category_order]
+
     certificates = db.execute("SELECT * FROM certificates ORDER BY sort_order, id").fetchall()
     education = db.execute("SELECT * FROM education ORDER BY sort_order, id").fetchall()
     resume = db.execute(
@@ -259,6 +285,8 @@ def index():
         titles=TITLES,
         skills_by_category=skills_by_category,
         projects=projects,
+        projects_by_category=projects_by_category,
+        project_categories=category_order,
         certificates=certificates,
         education=education,
         resume=resume,
@@ -304,6 +332,19 @@ def contact():
     flash("Thanks! Your message has been sent.", "success")
     return redirect(url_for("index", _anchor="contact"))
 
+
+@app.route("/resume/download")
+def resume_download():
+    db = get_db()
+    resume = db.execute(
+        "SELECT * FROM resume WHERE is_active = 1 ORDER BY uploaded_at DESC LIMIT 1"
+    ).fetchone()
+    if not resume:
+        abort(404)
+    return send_from_directory(
+        app.config["RESUME_UPLOAD_FOLDER"], resume["filename"],
+        as_attachment=True, download_name="Shridhar_Patil_Resume.pdf",
+    )
 @app.route("/resume/preview")
 def resume_preview():
     db = get_db()
@@ -317,25 +358,9 @@ def resume_preview():
     return send_from_directory(
         app.config["RESUME_UPLOAD_FOLDER"],
         resume["filename"],
-        as_attachment=False   # Opens in browser
-    ) 
-
-@app.route("/resume/download")
-def resume_download():
-    db = get_db()
-    resume = db.execute(
-        "SELECT * FROM resume WHERE is_active = 1 ORDER BY uploaded_at DESC LIMIT 1"
-    ).fetchone()
-
-    if not resume:
-        abort(404)
-
-    return send_from_directory(
-        app.config["RESUME_UPLOAD_FOLDER"],
-        resume["filename"],
-        as_attachment=True,
-        download_name="Shridhar_Patil_Resume.pdf",
+        as_attachment=False
     )
+
 
 @app.route("/certificates/<path:filename>")
 def certificate_file(filename):
@@ -464,13 +489,15 @@ def admin_projects():
             image_file = request.files.get("image")
             stored = save_upload(image_file, app.config["PROJECT_UPLOAD_FOLDER"],
                                   app.config["ALLOWED_IMAGE_EXT"], prefix="proj_")
+            category = request.form.get("category", "").strip() or PROJECT_CATEGORIES[0]
             db.execute(
-                """INSERT INTO projects (title, description, technologies, image, project_url, github_url, sort_order)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                """INSERT INTO projects (title, description, technologies, category, image, project_url, github_url, sort_order)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     request.form.get("title", "").strip(),
                     request.form.get("description", "").strip(),
                     request.form.get("technologies", "").strip(),
+                    category,
                     stored,
                     request.form.get("project_url", "").strip(),
                     request.form.get("github_url", "").strip(),
@@ -485,7 +512,7 @@ def admin_projects():
         return redirect(url_for("admin_projects"))
 
     projects = db.execute("SELECT * FROM projects ORDER BY sort_order, id").fetchall()
-    return render_template("admin/projects.html", projects=projects)
+    return render_template("admin/projects.html", projects=projects, categories=PROJECT_CATEGORIES)
 
 
 @app.route("/admin/certificates", methods=["GET", "POST"])
@@ -591,8 +618,10 @@ def server_error(e):
 # Entrypoint
 # --------------------------------------------------------------------------
 
-with app.app_context():
-    init_db()
-
 if __name__ == "__main__":
+    if not os.path.exists(app.config["DATABASE"]):
+        init_db()
+    else:
+        # Ensure schema/seed data exists even if db file already present
+        init_db()
     app.run(debug=True, host="0.0.0.0", port=5000)
