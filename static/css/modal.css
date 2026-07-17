@@ -206,6 +206,26 @@
   position: relative;
 }
 
+/* ===========================================================
+   Footer admin login link
+   =========================================================== */
+.footer-admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.4));
+  text-decoration: none;
+  margin-left: 16px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer-admin-link:hover {
+  opacity: 1;
+  color: var(--text-primary, #fff);
+}
+
 body.modal-open {
   overflow: hidden;
 }
