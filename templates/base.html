@@ -26,6 +26,7 @@
 
 <!-- App CSS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -61,6 +62,21 @@
 
 {% block content %}{% endblock %}
 
+<!-- Glass view modal (used by certificate / resume "View" buttons) -->
+<div class="glass-modal-backdrop" id="glass-modal-backdrop">
+  <div class="glass-modal glass" id="glass-modal">
+    <div class="glass-modal-head">
+      <span class="glass-modal-title" id="glass-modal-title"></span>
+      <button class="glass-modal-close" id="glass-modal-close" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="glass-modal-body" id="glass-modal-body">
+      <div class="glass-modal-loader"><i class="fa-solid fa-spinner fa-spin"></i></div>
+    </div>
+  </div>
+</div>
+
 <!-- Back to top -->
 <button id="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 
@@ -75,6 +91,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

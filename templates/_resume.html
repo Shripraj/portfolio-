@@ -15,7 +15,11 @@
       </div>
       <div class="resume-actions">
         {% if resume %}
-        <a href="{{ url_for('resume_preview') }}" target="_blank" class="btn btn-ghost">
+        <a href="{{ url_for('resume_preview') }}"
+           class="btn btn-ghost"
+           data-modal-view
+           data-modal-type="pdf"
+           data-modal-title="{{ site_name }} — Resume">
           <i class="fa-solid fa-eye"></i> Preview
         </a>
         <a href="{{ url_for('resume_download') }}" class="btn btn-primary">

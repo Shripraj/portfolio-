@@ -16,8 +16,29 @@
         {% for p in projects_by_category[category] %}
         <div class="project-card glass" data-category="{{ category|lower|replace(' ', '-') }}" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 4) * 80 }}">
           <div class="project-thumb">
+            {% if p.images %}
+            <script type="application/json" class="gallery-data">{{ p.images | map(attribute='url') | list | tojson }}</script>
+            {% endif %}
             {% if p.image %}
-            <img src="{{ url_for('static', filename='images/projects/' ~ p.image) }}" alt="{{ p.title }}">
+            <img src="{{ url_for('static', filename='images/projects/' ~ p.image) }}"
+                 alt="{{ p.title }}"
+                 data-modal-view
+                 data-modal-type="image"
+                 data-modal-title="{{ p.title }}"
+                 data-modal-src="{{ url_for('static', filename='images/projects/' ~ p.image) }}"
+                 style="cursor: pointer;">
+            <button type="button"
+                    class="project-thumb-view"
+                    data-modal-view
+                    data-modal-type="image"
+                    data-modal-title="{{ p.title }}"
+                    data-modal-src="{{ url_for('static', filename='images/projects/' ~ p.image) }}"
+                    aria-label="View photos">
+              <i class="fa-solid fa-expand"></i>
+            </button>
+            {% if p.images|length > 1 %}
+            <span class="gallery-count-badge"><i class="fa-solid fa-images"></i> {{ p.images|length }}</span>
+            {% endif %}
             {% else %}
             <div class="project-thumb-placeholder">
               <i class="fa-solid fa-chart-column"></i>

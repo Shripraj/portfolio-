@@ -98,6 +98,30 @@ def init_db():
         db.execute("ALTER TABLE projects ADD COLUMN category TEXT NOT NULL DEFAULT 'Data Analysis'")
         db.commit()
 
+    # --- Migration: gallery tables for multi-photo certificates/projects ---
+    # Each row is one image belonging to one certificate/project. The
+    # existing `certificates.image` / `projects.image` column is kept as the
+    # "cover" image (first upload) for backward compatibility with anything
+    # that only expects a single image.
+    db.executescript("""
+        CREATE TABLE IF NOT EXISTS certificate_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            certificate_id INTEGER NOT NULL,
+            filename TEXT NOT NULL,
+            sort_order INTEGER DEFAULT 0,
+            FOREIGN KEY (certificate_id) REFERENCES certificates(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS project_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER NOT NULL,
+            filename TEXT NOT NULL,
+            sort_order INTEGER DEFAULT 0,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+        );
+    """)
+    db.commit()
+
     # Seed admin user
     cur = db.execute("SELECT COUNT(*) AS c FROM admin")
     if cur.fetchone()["c"] == 0:
@@ -218,6 +242,26 @@ def get_setting(key, default=""):
     return row["value"] if row else default
 
 
+def get_certificate_gallery(cert_id):
+    """All images for a certificate (id + url), in upload order (cover image included)."""
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, filename FROM certificate_images WHERE certificate_id = ? ORDER BY sort_order, id",
+        (cert_id,),
+    ).fetchall()
+    return [{"id": r["id"], "url": url_for("certificate_file", filename=r["filename"])} for r in rows]
+
+
+def get_project_gallery(project_id):
+    """All images for a project (id + url), in upload order (cover image included)."""
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, filename FROM project_images WHERE project_id = ? ORDER BY sort_order, id",
+        (project_id,),
+    ).fetchall()
+    return [{"id": r["id"], "url": url_for("static", filename="images/projects/" + r["filename"])} for r in rows]
+
+
 # --------------------------------------------------------------------------
 # Auth helpers
 # --------------------------------------------------------------------------
@@ -237,17 +281,28 @@ def allowed_file(filename, allowed_ext):
 
 
 def save_upload(file_storage, folder, allowed_ext, prefix=""):
-    """Save an uploaded file safely and return its stored filename, or None."""
+    """Save a single uploaded file safely and return its stored filename, or None."""
     if not file_storage or file_storage.filename == "":
         return None
     filename = secure_filename(file_storage.filename)
     if not allowed_file(filename, allowed_ext):
         return None
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S%f")
     stored_name = f"{prefix}{timestamp}_{filename}"
     os.makedirs(folder, exist_ok=True)
     file_storage.save(os.path.join(folder, stored_name))
     return stored_name
+
+
+def save_uploads(file_storages, folder, allowed_ext, prefix=""):
+    """Save multiple uploaded files. Returns the list of stored filenames
+    (invalid/empty entries are silently skipped)."""
+    stored = []
+    for file_storage in file_storages or []:
+        name = save_upload(file_storage, folder, allowed_ext, prefix=prefix)
+        if name:
+            stored.append(name)
+    return stored
 
 
 # --------------------------------------------------------------------------
@@ -262,7 +317,9 @@ def index():
     for row in skills_rows:
         skills_by_category.setdefault(row["category"], []).append(row)
 
-    projects = db.execute("SELECT * FROM projects ORDER BY sort_order, id").fetchall()
+    project_rows = db.execute("SELECT * FROM projects ORDER BY sort_order, id").fetchall()
+    projects = [dict(p, images=get_project_gallery(p["id"])) for p in project_rows]
+
     projects_by_category = {}
     for p in projects:
         projects_by_category.setdefault(p["category"], []).append(p)
@@ -271,7 +328,9 @@ def index():
     category_order = [c for c in PROJECT_CATEGORIES if c in projects_by_category]
     category_order += [c for c in projects_by_category if c not in category_order]
 
-    certificates = db.execute("SELECT * FROM certificates ORDER BY sort_order, id").fetchall()
+    cert_rows = db.execute("SELECT * FROM certificates ORDER BY sort_order, id").fetchall()
+    certificates = [dict(c, images=get_certificate_gallery(c["id"])) for c in cert_rows]
+
     education = db.execute("SELECT * FROM education ORDER BY sort_order, id").fetchall()
     resume = db.execute(
         "SELECT * FROM resume WHERE is_active = 1 ORDER BY uploaded_at DESC LIMIT 1"
@@ -486,11 +545,15 @@ def admin_projects():
     if request.method == "POST":
         action = request.form.get("action")
         if action == "add":
-            image_file = request.files.get("image")
-            stored = save_upload(image_file, app.config["PROJECT_UPLOAD_FOLDER"],
-                                  app.config["ALLOWED_IMAGE_EXT"], prefix="proj_")
+            image_files = request.files.getlist("images")
+            stored_list = save_uploads(
+                image_files, app.config["PROJECT_UPLOAD_FOLDER"],
+                app.config["ALLOWED_IMAGE_EXT"], prefix="proj_",
+            )
+            cover_image = stored_list[0] if stored_list else None
             category = request.form.get("category", "").strip() or PROJECT_CATEGORIES[0]
-            db.execute(
+
+            cur = db.execute(
                 """INSERT INTO projects (title, description, technologies, category, image, project_url, github_url, sort_order)
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
@@ -498,20 +561,73 @@ def admin_projects():
                     request.form.get("description", "").strip(),
                     request.form.get("technologies", "").strip(),
                     category,
-                    stored,
+                    cover_image,
                     request.form.get("project_url", "").strip(),
                     request.form.get("github_url", "").strip(),
                     0,
                 ),
             )
-            flash("Project added.", "success")
+            project_id = cur.lastrowid
+            for i, fname in enumerate(stored_list):
+                db.execute(
+                    "INSERT INTO project_images (project_id, filename, sort_order) VALUES (?, ?, ?)",
+                    (project_id, fname, i),
+                )
+            flash(
+                f"Project added with {len(stored_list)} photo(s)." if stored_list else "Project added.",
+                "success",
+            )
+        elif action == "add_images":
+            # Append more photos to an existing project without editing its other fields.
+            project_id = request.form.get("project_id")
+            image_files = request.files.getlist("images")
+            stored_list = save_uploads(
+                image_files, app.config["PROJECT_UPLOAD_FOLDER"],
+                app.config["ALLOWED_IMAGE_EXT"], prefix="proj_",
+            )
+            existing_count = db.execute(
+                "SELECT COUNT(*) c FROM project_images WHERE project_id = ?", (project_id,)
+            ).fetchone()["c"]
+            for i, fname in enumerate(stored_list):
+                db.execute(
+                    "INSERT INTO project_images (project_id, filename, sort_order) VALUES (?, ?, ?)",
+                    (project_id, fname, existing_count + i),
+                )
+            # If the project had no cover image yet, promote the first new upload.
+            row = db.execute("SELECT image FROM projects WHERE id = ?", (project_id,)).fetchone()
+            if row and not row["image"] and stored_list:
+                db.execute("UPDATE projects SET image = ? WHERE id = ?", (stored_list[0], project_id))
+            flash(f"Added {len(stored_list)} photo(s) to the project." if stored_list else "No valid photos uploaded.", "success")
+        elif action == "delete_image":
+            image_id = request.form.get("image_id")
+            project_id = request.form.get("project_id")
+            row = db.execute("SELECT filename FROM project_images WHERE id = ?", (image_id,)).fetchone()
+            db.execute("DELETE FROM project_images WHERE id = ?", (image_id,))
+            if row:
+                # If the deleted image was the cover, promote the next remaining image (if any).
+                proj = db.execute("SELECT image FROM projects WHERE id = ?", (project_id,)).fetchone()
+                if proj and proj["image"] == row["filename"]:
+                    next_img = db.execute(
+                        "SELECT filename FROM project_images WHERE project_id = ? ORDER BY sort_order, id LIMIT 1",
+                        (project_id,),
+                    ).fetchone()
+                    db.execute(
+                        "UPDATE projects SET image = ? WHERE id = ?",
+                        (next_img["filename"] if next_img else None, project_id),
+                    )
+                try:
+                    os.remove(os.path.join(app.config["PROJECT_UPLOAD_FOLDER"], row["filename"]))
+                except OSError:
+                    pass
+            flash("Photo removed.", "success")
         elif action == "delete":
             db.execute("DELETE FROM projects WHERE id = ?", (request.form.get("project_id"),))
             flash("Project deleted.", "success")
         db.commit()
         return redirect(url_for("admin_projects"))
 
-    projects = db.execute("SELECT * FROM projects ORDER BY sort_order, id").fetchall()
+    project_rows = db.execute("SELECT * FROM projects ORDER BY sort_order, id").fetchall()
+    projects = [dict(p, images=get_project_gallery(p["id"])) for p in project_rows]
     return render_template("admin/projects.html", projects=projects, categories=PROJECT_CATEGORIES)
 
 
@@ -522,22 +638,75 @@ def admin_certificates():
     if request.method == "POST":
         action = request.form.get("action")
         if action == "add":
-            image_file = request.files.get("image")
-            stored = save_upload(image_file, app.config["CERT_UPLOAD_FOLDER"],
-                                  app.config["ALLOWED_IMAGE_EXT"], prefix="cert_")
-            db.execute(
+            image_files = request.files.getlist("images")
+            stored_list = save_uploads(
+                image_files, app.config["CERT_UPLOAD_FOLDER"],
+                app.config["ALLOWED_IMAGE_EXT"], prefix="cert_",
+            )
+            cover_image = stored_list[0] if stored_list else None
+
+            cur = db.execute(
                 """INSERT INTO certificates (name, organization, completion_date, image, certificate_url, sort_order)
                    VALUES (?, ?, ?, ?, ?, ?)""",
                 (
                     request.form.get("name", "").strip(),
                     request.form.get("organization", "").strip(),
                     request.form.get("completion_date", "").strip(),
-                    stored,
+                    cover_image,
                     request.form.get("certificate_url", "").strip(),
                     0,
                 ),
             )
-            flash("Certificate added.", "success")
+            cert_id = cur.lastrowid
+            for i, fname in enumerate(stored_list):
+                db.execute(
+                    "INSERT INTO certificate_images (certificate_id, filename, sort_order) VALUES (?, ?, ?)",
+                    (cert_id, fname, i),
+                )
+            flash(
+                f"Certificate added with {len(stored_list)} photo(s)." if stored_list else "Certificate added.",
+                "success",
+            )
+        elif action == "add_images":
+            cert_id = request.form.get("cert_id")
+            image_files = request.files.getlist("images")
+            stored_list = save_uploads(
+                image_files, app.config["CERT_UPLOAD_FOLDER"],
+                app.config["ALLOWED_IMAGE_EXT"], prefix="cert_",
+            )
+            existing_count = db.execute(
+                "SELECT COUNT(*) c FROM certificate_images WHERE certificate_id = ?", (cert_id,)
+            ).fetchone()["c"]
+            for i, fname in enumerate(stored_list):
+                db.execute(
+                    "INSERT INTO certificate_images (certificate_id, filename, sort_order) VALUES (?, ?, ?)",
+                    (cert_id, fname, existing_count + i),
+                )
+            row = db.execute("SELECT image FROM certificates WHERE id = ?", (cert_id,)).fetchone()
+            if row and not row["image"] and stored_list:
+                db.execute("UPDATE certificates SET image = ? WHERE id = ?", (stored_list[0], cert_id))
+            flash(f"Added {len(stored_list)} photo(s) to the certificate." if stored_list else "No valid photos uploaded.", "success")
+        elif action == "delete_image":
+            image_id = request.form.get("image_id")
+            cert_id = request.form.get("cert_id")
+            row = db.execute("SELECT filename FROM certificate_images WHERE id = ?", (image_id,)).fetchone()
+            db.execute("DELETE FROM certificate_images WHERE id = ?", (image_id,))
+            if row:
+                cert = db.execute("SELECT image FROM certificates WHERE id = ?", (cert_id,)).fetchone()
+                if cert and cert["image"] == row["filename"]:
+                    next_img = db.execute(
+                        "SELECT filename FROM certificate_images WHERE certificate_id = ? ORDER BY sort_order, id LIMIT 1",
+                        (cert_id,),
+                    ).fetchone()
+                    db.execute(
+                        "UPDATE certificates SET image = ? WHERE id = ?",
+                        (next_img["filename"] if next_img else None, cert_id),
+                    )
+                try:
+                    os.remove(os.path.join(app.config["CERT_UPLOAD_FOLDER"], row["filename"]))
+                except OSError:
+                    pass
+            flash("Photo removed.", "success")
         elif action == "replace_image":
             cert_id = request.form.get("cert_id")
             image_file = request.files.get("image")
@@ -552,7 +721,8 @@ def admin_certificates():
         db.commit()
         return redirect(url_for("admin_certificates"))
 
-    certificates = db.execute("SELECT * FROM certificates ORDER BY sort_order, id").fetchall()
+    cert_rows = db.execute("SELECT * FROM certificates ORDER BY sort_order, id").fetchall()
+    certificates = [dict(c, images=get_certificate_gallery(c["id"])) for c in cert_rows]
     return render_template("admin/certificates.html", certificates=certificates)
 
 

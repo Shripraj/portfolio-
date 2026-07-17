@@ -26,8 +26,9 @@
         <input type="text" name="completion_date" placeholder="e.g. March 2026">
       </div>
       <div class="form-group">
-        <label>Certificate Image</label>
-        <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp,.gif">
+        <label>Certificate Image(s)</label>
+        <input type="file" id="cert-images-input" name="images" accept=".png,.jpg,.jpeg,.webp,.gif" multiple>
+        <div class="multi-upload-preview" id="cert-images-preview"></div>
       </div>
     </div>
     <div class="form-group">
@@ -41,12 +42,35 @@
 <div class="admin-panel glass">
   <h2>Existing Certificates</h2>
   <table class="admin-table">
-    <thead><tr><th>Name</th><th>Organization</th><th>Replace Image</th><th></th></tr></thead>
+    <thead><tr><th>Name</th><th>Organization</th><th>Photos</th><th>Replace Cover</th><th></th></tr></thead>
     <tbody>
       {% for c in certificates %}
       <tr>
         <td>{{ c.name }}</td>
         <td>{{ c.organization }}</td>
+        <td>
+          <div class="gallery-cell">
+            {% for img in c.images %}
+            <div class="gallery-thumb">
+              <img src="{{ img.url }}" alt="{{ c.name }}">
+              <form method="POST" onsubmit="return confirm('Remove this photo?');">
+                <input type="hidden" name="action" value="delete_image">
+                <input type="hidden" name="cert_id" value="{{ c.id }}">
+                <input type="hidden" name="image_id" value="{{ img.id }}">
+                <button type="submit" class="gallery-thumb-remove" aria-label="Remove photo"><i class="fa-solid fa-xmark"></i></button>
+              </form>
+            </div>
+            {% else %}
+            <span class="gallery-empty">No photos</span>
+            {% endfor %}
+          </div>
+          <form method="POST" enctype="multipart/form-data" class="admin-add-photos-form">
+            <input type="hidden" name="action" value="add_images">
+            <input type="hidden" name="cert_id" value="{{ c.id }}">
+            <input type="file" name="images" accept=".png,.jpg,.jpeg,.webp,.gif" multiple required>
+            <button type="submit" class="btn btn-sm btn-ghost"><i class="fa-solid fa-plus"></i> Add photos</button>
+          </form>
+        </td>
         <td>
           <form method="POST" enctype="multipart/form-data" class="admin-replace-form">
             <input type="hidden" name="action" value="replace_image">
@@ -67,4 +91,11 @@
     </tbody>
   </table>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/multi-upload.js') }}"></script>
+<script>
+  initMultiUpload('cert-images-input', 'cert-images-preview');
+</script>
 {% endblock %}

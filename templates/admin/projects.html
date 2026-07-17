@@ -33,8 +33,9 @@
       </div>
     </div>
     <div class="form-group">
-      <label>Project Image</label>
-      <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp,.gif">
+      <label>Project Image(s)</label>
+      <input type="file" id="project-images-input" name="images" accept=".png,.jpg,.jpeg,.webp,.gif" multiple>
+      <div class="multi-upload-preview" id="project-images-preview"></div>
     </div>
     <div class="form-row">
       <div class="form-group">
@@ -53,13 +54,36 @@
 <div class="admin-panel glass">
   <h2>Existing Projects</h2>
   <table class="admin-table">
-    <thead><tr><th>Title</th><th>Category</th><th>Technologies</th><th></th></tr></thead>
+    <thead><tr><th>Title</th><th>Category</th><th>Technologies</th><th>Photos</th><th></th></tr></thead>
     <tbody>
       {% for p in projects %}
       <tr>
         <td>{{ p.title }}</td>
         <td><span class="badge">{{ p.category }}</span></td>
         <td>{{ p.technologies }}</td>
+        <td>
+          <div class="gallery-cell">
+            {% for img in p.images %}
+            <div class="gallery-thumb">
+              <img src="{{ img.url }}" alt="{{ p.title }}">
+              <form method="POST" onsubmit="return confirm('Remove this photo?');">
+                <input type="hidden" name="action" value="delete_image">
+                <input type="hidden" name="project_id" value="{{ p.id }}">
+                <input type="hidden" name="image_id" value="{{ img.id }}">
+                <button type="submit" class="gallery-thumb-remove" aria-label="Remove photo"><i class="fa-solid fa-xmark"></i></button>
+              </form>
+            </div>
+            {% else %}
+            <span class="gallery-empty">No photos</span>
+            {% endfor %}
+          </div>
+          <form method="POST" enctype="multipart/form-data" class="admin-add-photos-form">
+            <input type="hidden" name="action" value="add_images">
+            <input type="hidden" name="project_id" value="{{ p.id }}">
+            <input type="file" name="images" accept=".png,.jpg,.jpeg,.webp,.gif" multiple required>
+            <button type="submit" class="btn btn-sm btn-ghost"><i class="fa-solid fa-plus"></i> Add photos</button>
+          </form>
+        </td>
         <td>
           <form method="POST" onsubmit="return confirm('Delete this project?');">
             <input type="hidden" name="action" value="delete">
@@ -72,4 +96,11 @@
     </tbody>
   </table>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/multi-upload.js') }}"></script>
+<script>
+  initMultiUpload('project-images-input', 'project-images-preview');
+</script>
 {% endblock %}
