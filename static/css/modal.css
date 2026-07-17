@@ -1,0 +1,221 @@
+/* ===========================================================
+   Glass View Modal
+   Used by certificate "View" and resume "Preview" buttons.
+   Relies on the same CSS variables / .glass utility already
+   defined in style.css (blur, border, background tint, etc).
+   =========================================================== */
+
+.glass-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(5, 8, 15, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.glass-modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.glass-modal {
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  transform: scale(0.94) translateY(12px);
+  transition: transform 0.25s ease;
+  /* .glass already provides background blur/tint/border via style.css */
+}
+
+.glass-modal-backdrop.active .glass-modal {
+  transform: scale(1) translateY(0);
+}
+
+.glass-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.glass-modal-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary, #fff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.glass-modal-close {
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  color: var(--text-primary, #fff);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 12px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.glass-modal-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: rotate(90deg);
+}
+
+.glass-modal-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  min-height: 240px;
+}
+
+.glass-modal-loader {
+  font-size: 1.6rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+}
+
+.glass-modal-img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 10px;
+  display: block;
+  object-fit: contain;
+}
+
+.glass-modal-iframe {
+  width: 100%;
+  height: 70vh;
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.glass-modal-error {
+  text-align: center;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  padding: 24px;
+}
+
+/* Gallery navigation (shown when a card has more than one photo) */
+.glass-modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(10, 12, 18, 0.6);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.glass-modal-nav:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.glass-modal-nav-prev { left: 10px; }
+.glass-modal-nav-next { right: 10px; }
+
+.glass-modal-counter {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: #fff;
+  background: rgba(10, 12, 18, 0.65);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* Photo-count badge on cert/project thumbnails */
+.gallery-count-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 0.7rem;
+  color: #fff;
+  background: rgba(10, 12, 18, 0.65);
+  padding: 2px 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Expand-to-view-photos overlay button on project thumbnails */
+.project-thumb {
+  position: relative;
+}
+
+.project-thumb-view {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(10, 12, 18, 0.65);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.project-thumb-view:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.06);
+}
+
+.cert-thumb {
+  position: relative;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 560px) {
+  .glass-modal {
+    max-width: 100%;
+    max-height: 90vh;
+  }
+  .glass-modal-iframe {
+    height: 60vh;
+  }
+}

@@ -7,9 +7,16 @@
       {% for c in certificates %}
       <div class="cert-card glass" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 80 }}">
 
+        {% if c.images %}
+        <script type="application/json" class="gallery-data">{{ c.images | map(attribute='url') | list | tojson }}</script>
+        {% endif %}
+
         <div class="cert-thumb">
           {% if c.image %}
             <img src="{{ url_for('certificate_file', filename=c.image) }}" alt="{{ c.name }}">
+            {% if c.images|length > 1 %}
+            <span class="gallery-count-badge"><i class="fa-solid fa-images"></i> {{ c.images|length }}</span>
+            {% endif %}
           {% else %}
             <div class="cert-thumb-placeholder">
               <i class="fa-solid fa-certificate"></i>
@@ -36,9 +43,11 @@
 
             <!-- View Certificate -->
             <a href="{{ url_for('certificate_file', filename=c.image) }}"
-               target="_blank"
                rel="noopener"
-               class="btn btn-sm btn-primary">
+               class="btn btn-sm btn-primary"
+               data-modal-view
+               data-modal-type="image"
+               data-modal-title="{{ c.name }}">
               <i class="fa-solid fa-eye"></i>
               View
             </a>
