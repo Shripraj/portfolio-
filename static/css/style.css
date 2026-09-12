@@ -382,46 +382,46 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   z-index: 2;
 }
 
-/* The two thick rope arms forming the V */
+/* The two thick rope arms forming the wide V */
 .id-lanyard-rope {
   position: relative;
-  width: 120px;
-  height: 60px;
+  width: 300px;
+  height: 90px;
   animation: rope-sway 4s ease-in-out infinite;
-  transform-origin: top center;
+  transform-origin: bottom center;
 }
 .id-lanyard-rope::before,
 .id-lanyard-rope::after {
   content: '';
   position: absolute;
-  top: 0;
-  width: 10px;
-  height: 68px;
-  border-radius: 6px;
+  bottom: 0;
+  width: 13px;
+  height: 160px;
+  border-radius: 7px;
   background: linear-gradient(
     180deg,
-    var(--accent-violet) 0%,
-    var(--accent-cyan) 50%,
-    var(--accent-violet) 100%
+    var(--accent-cyan) 0%,
+    var(--accent-violet) 55%,
+    var(--accent-cyan) 100%
   );
-  box-shadow: 0 0 10px rgba(168,85,247,0.5), 0 0 22px rgba(34,211,238,0.25);
+  box-shadow: 0 0 14px rgba(168,85,247,0.6), 0 0 32px rgba(34,211,238,0.25);
 }
-/* Left arm — angled right toward center-bottom */
+/* Left arm — wide spread, steep inward angle */
 .id-lanyard-rope::before {
-  left: 0;
-  transform-origin: top left;
-  transform: rotate(20deg);
+  left: 6px;
+  transform-origin: bottom center;
+  transform: rotate(52deg);
 }
-/* Right arm — angled left toward center-bottom */
+/* Right arm — wide spread, steep inward angle */
 .id-lanyard-rope::after {
-  right: 0;
-  transform-origin: top right;
-  transform: rotate(-20deg);
+  right: 6px;
+  transform-origin: bottom center;
+  transform: rotate(-52deg);
 }
 
 /* Metal clip at the V bottom */
 .id-lanyard-clip {
-  width: 22px; height: 30px;
+  width: 24px; height: 32px;
   background: linear-gradient(180deg, #d0d4e8 0%, #8a8ea8 60%, #5a5e78 100%);
   border-radius: 3px 3px 8px 8px;
   box-shadow:
@@ -429,7 +429,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     inset 0 -2px 4px rgba(0,0,0,0.3),
     0 4px 12px rgba(0,0,0,0.5);
   position: relative;
-  margin-top: -6px;
+  margin-top: -12px;
   z-index: 3;
 }
 .id-lanyard-clip::before {
@@ -449,12 +449,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   width: 6px; height: 8px;
   background: linear-gradient(180deg, #888ca8 0%, #5a5e78 100%);
   border-radius: 0 0 3px 3px;
-}
-
-@keyframes rope-sway {
-  0%,100% { transform: skewX(0deg); }
-  30%      { transform: skewX(5deg); }
-  60%      { transform: skewX(-3deg); }
 }
 
 /* Card itself */
