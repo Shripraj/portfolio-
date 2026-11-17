@@ -3,7 +3,6 @@ services:
   - type: web
     name: shridhar-portfolio
     runtime: python
-    pythonVersion: "3.12.8"
     buildCommand: pip install -r requirements.txt
     # Create tables and load content (safe to repeat), then start the site.
     startCommand: flask seed && flask sync-catalogue && gunicorn api.wsgi:app --workers 1 --threads 8 --bind 0.0.0.0:$PORT
@@ -13,6 +12,8 @@ services:
       mountPath: /var/data
       sizeGB: 1
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
       - key: FLASK_APP
         value: api.wsgi:app
       - key: SECRET_KEY
