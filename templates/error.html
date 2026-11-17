@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "_macros.html" import header_nav, footer_block with context %}
+{% block title %}{{ code }} | {{ page_title or 'Portfolio' }}{% endblock %}
+{% block header %}{% if profile %}{{ header_nav(profile, visible, mode, resume, modes) }}{% endif %}{% endblock %}
+{% block footer %}{% if profile %}{{ footer_block(profile, visible) }}{% endif %}{% endblock %}
+{% block content %}
+<section class="section section--first">
+  <div class="container narrow">
+    <p class="eyebrow">Error {{ code }}</p>
+    <h1 class="section__title">{{ message }}</h1>
+    <p><a class="btn btn--primary" href="{{ url_for('index') }}">Back to the homepage</a></p>
+  </div>
+</section>
+{% endblock %}

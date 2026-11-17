@@ -1,0 +1,33 @@
+# Render Blueprint: one web service with a persistent disk (paid plans only).
+services:
+  - type: web
+    name: shridhar-portfolio
+    runtime: python
+    pythonVersion: "3.12.8"
+    buildCommand: pip install -r requirements.txt
+    # Create tables and load content (safe to repeat), then start the site.
+    startCommand: flask seed && gunicorn api.wsgi:app --workers 1 --threads 8 --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health
+    disk:
+      name: portfolio-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: FLASK_APP
+        value: api.wsgi:app
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATA_DIR
+        value: /var/data
+      - key: DATABASE_URL
+        value: sqlite:////var/data/portfolio.db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: TRUST_PROXY
+        value: "true"
+      - key: SITE_URL
+        sync: false          # e.g. https://shridhar-portfolio.onrender.com

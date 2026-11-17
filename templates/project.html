@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% from "_macros.html" import header_nav, footer_block with context %}
+
+{% block title %}{{ project.title }} | {{ profile.name }}{% endblock %}
+{% block description %}{{ project.summary }}{% endblock %}
+{% block og_title %}{{ project.title }}{% endblock %}
+{% block og_description %}{{ project.summary }}{% endblock %}
+{% block og_type %}article{% endblock %}
+
+{% block header %}{{ header_nav(profile, visible, mode, resume, modes) }}{% endblock %}
+{% block footer %}{{ footer_block(profile, visible) }}{% endblock %}
+
+{% block content %}
+<article class="case">
+  <header class="case__hero section--first">
+    <div class="container case__head">
+      <p class="breadcrumb"><a href="{{ url_for('index') }}#projects">← All projects</a></p>
+      {% if project.categories %}<p class="eyebrow">{{ project.categories|map(attribute='name')|join(' · ') }}</p>{% endif %}
+      <h1 class="case__title">{{ project.title }}</h1>
+      <p class="case__summary">{{ project.summary }}</p>
+      <div class="case__links">
+        {% if project.github_url %}<a class="btn btn--ghost" href="{{ project.github_url }}" target="_blank" rel="noopener">View repository</a>{% endif %}
+        {% if project.live_url %}<a class="btn btn--primary" href="{{ project.live_url }}" target="_blank" rel="noopener">Live demo</a>{% endif %}
+      </div>
+    </div>
+  </header>
+
+  {% if project.image %}
+  <div class="container"><figure class="case__image"><img src="{{ project.image.url }}" alt="{{ project.image.alt or project.title }}" decoding="async"></figure></div>
+  {% endif %}
+
+  <div class="container case__body">
+    {% if project.problem %}
+    <section class="case__block"><h2 class="subhead">Problem</h2><p>{{ project.problem }}</p></section>
+    {% endif %}
+    {% if project.solution %}
+    <section class="case__block"><h2 class="subhead">Solution</h2><p>{{ project.solution }}</p></section>
+    {% endif %}
+    {% if project.features %}
+    <section class="case__block"><h2 class="subhead">Key features</h2>
+      <ul class="bullets">{% for f in project.features %}<li>{{ f }}</li>{% endfor %}</ul>
+    </section>
+    {% endif %}
+    {% if project.outcomes %}
+    <section class="case__block"><h2 class="subhead">Outcomes</h2>
+      <ul class="bullets">{% for o in project.outcomes %}<li>{{ o }}</li>{% endfor %}</ul>
+    </section>
+    {% endif %}
+    {% if paragraphs %}
+    <section class="case__block case__block--prose">
+      {% for para in paragraphs %}<p>{{ para }}</p>{% endfor %}
+    </section>
+    {% endif %}
+    {% if project.technologies %}
+    <section class="case__block"><h2 class="subhead">Technology stack</h2>
+      <ul class="chips">{% for t in project.technologies %}<li>{{ t }}</li>{% endfor %}</ul>
+    </section>
+    {% endif %}
+  </div>
+
+  <nav class="container case__pager" aria-label="Other projects">
+    {% if previous %}<a href="{{ url_for('project_detail', slug=previous.slug) }}"><span class="muted">Previous</span>{{ previous.title }}</a>{% else %}<span></span>{% endif %}
+    {% if following %}<a class="case__pager--next" href="{{ url_for('project_detail', slug=following.slug) }}"><span class="muted">Next</span>{{ following.title }}</a>{% endif %}
+  </nav>
+</article>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% macro header_nav(profile, visible, mode, resume, modes) -%}
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="#home" aria-label="{{ profile.name }}, back to top">
+      <span class="wordmark__mark">{{ profile.name.split()|map('first')|join }}</span>
+      <span class="wordmark__name">{{ profile.name }}</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <ul class="site-nav__list">
+        <li><a href="#home">Home</a></li>
+        {% if 'about' in visible %}<li><a href="#about">About</a></li>{% endif %}
+        {% if 'projects' in visible %}<li><a href="#projects">Projects</a></li>{% endif %}
+        {% if 'experience' in visible %}<li><a href="#experience">Experience</a></li>{% endif %}
+        {% if 'skills' in visible %}<li><a href="#skills">Skills</a></li>{% endif %}
+        {% if 'contact' in visible %}<li><a href="#contact">Contact</a></li>{% endif %}
+      </ul>
+    </nav>
+
+    <div class="site-header__tools">
+      {% if resume %}<a class="btn btn--small btn--ghost site-header__resume" href="{{ url_for('resume_for_track', track=mode) }}" download>Resume</a>{% endif %}
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch between light and dark theme" aria-pressed="false">
+        <span class="icon-btn__sun" aria-hidden="true">☀</span>
+        <span class="icon-btn__moon" aria-hidden="true">☾</span>
+      </button>
+      <button class="icon-btn menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+        <span class="sr-only">Menu</span>
+        <span class="menu-toggle__bar" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+{%- endmacro %}
+
+{% macro footer_block(profile, visible) -%}
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div>
+      <p class="site-footer__name">{{ profile.name }}</p>
+      <p class="muted">{{ profile.primary_title }} · {{ profile.secondary_title }}</p>
+    </div>
+    <ul class="site-footer__links">
+      {% if profile.github_url %}<li><a href="{{ profile.github_url }}" target="_blank" rel="noopener">GitHub</a></li>{% endif %}
+      {% if profile.linkedin_url %}<li><a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a></li>{% endif %}
+      {% if profile.email %}<li><a href="mailto:{{ profile.email }}">Email</a></li>{% endif %}
+      <li><a href="#home">Back to top</a></li>
+    </ul>
+    <p class="muted site-footer__copy">© {{ current_year }} {{ profile.name }}</p>
+  </div>
+</footer>
+{%- endmacro %}

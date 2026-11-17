@@ -1,0 +1,584 @@
+{
+  "_note": "Consolidated from the two uploaded resumes (DOCX + PDF) and the project brief. Items marked in REVIEW.md are open for confirmation. Empty strings / nulls are deliberate: they show as editable gaps in the admin dashboard and are never invented.",
+  "profile": {
+    "name": "Shridhar Patil",
+    "headline": "Python Developer building practical software and data-driven solutions.",
+    "primary_title": "Python Software Developer",
+    "secondary_title": "Data Analyst",
+    "bio": "I'm a Computer Science Engineering student at S. G. Balekundri Institute of Technology in Belagavi, graduating in 2027. I enjoy building small, useful applications with Python and Flask, and I'm most interested in the point where software meets data: cleaning messy datasets, analysing them, and turning the results into something people can act on. Lately I've been working with generative AI and RAG-based applications, and I'm currently a Data Analyst Intern in Bengaluru, where I use Python, Pandas and NumPy for cleaning, validation and exploratory analysis.",
+    "intro_developer": "I build backend applications and full-stack web tools with Python and Flask: REST APIs, database-backed features and AI-powered applications, including a cattle and buffalo breed classifier and an AI lifestyle coach. I try to start from a real problem and finish with something someone can actually use.",
+    "intro_analyst": "I work with data from raw to readable. My analysis uses Python with Pandas and NumPy, alongside Excel, SQL and Power BI for dashboards. Recent work covers rainfall variation and forecasting, school-education data for 36 states and union territories, and pay equity analysis with recommendations.",
+    "email": "patilshridhar1301@gmail.com",
+    "phone": "+91 9591081475",
+    "location": "Bengaluru, Karnataka, India",
+    "linkedin_url": "https://www.linkedin.com/in/patilshridhar",
+    "github_url": "https://github.com/Shripraj/Shridhar-Patil"
+  },
+  "settings": {
+    "site_title": "Shridhar Patil | Python Developer & Data Analyst",
+    "meta_description": "Portfolio of Shridhar Patil, a Python software developer and data analyst in Bengaluru. Flask applications, AI-powered tools, data analysis and dashboards.",
+    "seo_keywords": "Python developer, Flask, data analyst, Pandas, Power BI, SQL, generative AI, Bengaluru",
+    "homepage_headline": "Python Developer building practical software and data-driven solutions.",
+    "homepage_bio": "I'm a Computer Science Engineering student interested in building useful applications, solving real problems with Python, and turning complex data into meaningful insights.",
+    "default_theme": "light",
+    "visible_sections": [
+      "about",
+      "projects",
+      "experience",
+      "skills",
+      "certifications",
+      "contact"
+    ]
+  },
+  "project_categories": [
+    {
+      "name": "Python Development",
+      "position": 0
+    },
+    {
+      "name": "Full Stack Development",
+      "position": 1
+    },
+    {
+      "name": "Machine Learning",
+      "position": 2
+    },
+    {
+      "name": "Data Analytics",
+      "position": 3
+    }
+  ],
+  "projects": [
+    {
+      "title": "GoVigyan – AI-Based Cattle & Buffalo Breed Detection",
+      "legacy_titles": [
+        "GoVigyan: AI-Based Cattle & Buffalo Breed Detection"
+      ],
+      "categories": [
+        "Machine Learning",
+        "Full Stack Development",
+        "Python Development"
+      ],
+      "modes": [
+        "python"
+      ],
+      "featured": true,
+      "position": 0,
+      "is_published": true,
+      "summary": "A web application that identifies cattle and buffalo breeds from uploaded images using a trained CNN model.",
+      "problem": "Identifying cattle and buffalo breeds from images is difficult for people without specialised livestock knowledge.",
+      "solution": "Built an AI-powered web application that classifies breeds from uploaded images, with the trained model integrated into a Flask backend for real-time prediction.",
+      "details": "",
+      "technologies": [
+        "Python",
+        "TensorFlow/Keras",
+        "CNN",
+        "OpenCV",
+        "Flask",
+        "HTML",
+        "CSS",
+        "SQLite"
+      ],
+      "features": [
+        "Image upload",
+        "Breed classification",
+        "CNN model integration",
+        "Flask backend",
+        "Breed information presentation"
+      ],
+      "outcomes": [
+        "Resume-reported accuracy: 75–80%"
+      ],
+      "github_url": null,
+      "live_url": null
+    },
+    {
+      "title": "GlowGuide – AI Lifestyle Coach",
+      "legacy_titles": [
+        "GlowGuide: AI Lifestyle Coach"
+      ],
+      "categories": [
+        "Machine Learning",
+        "Full Stack Development",
+        "Python Development"
+      ],
+      "modes": [
+        "python"
+      ],
+      "featured": true,
+      "position": 1,
+      "is_published": true,
+      "summary": "An AI-powered lifestyle application featuring personalized wellness advice, habit tracking, interactive storytelling, AI chat support and dynamic dashboards.",
+      "problem": "",
+      "solution": "",
+      "details": "",
+      "technologies": [
+        "Flask",
+        "PostgreSQL",
+        "Firebase",
+        "OpenAI API",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "features": [
+        "AI chat support",
+        "Habit tracking",
+        "Personalized wellness suggestions",
+        "Interactive storytelling",
+        "Dynamic dashboards"
+      ],
+      "outcomes": [],
+      "github_url": null,
+      "live_url": null
+    },
+    {
+      "title": "CodeSpace",
+      "categories": [
+        "Full Stack Development",
+        "Python Development"
+      ],
+      "modes": [
+        "python"
+      ],
+      "featured": true,
+      "position": 2,
+      "is_published": true,
+      "summary": "",
+      "problem": "",
+      "solution": "",
+      "details": "",
+      "technologies": [],
+      "features": [],
+      "outcomes": [],
+      "github_url": null,
+      "live_url": null
+    },
+    {
+      "title": "Karnataka Rainfall Analytics & Forecasting Dashboard",
+      "legacy_titles": [
+        "Karnataka Rainfall Analytics & Forecasting Dashboard"
+      ],
+      "categories": [
+        "Data Analytics"
+      ],
+      "modes": [
+        "data"
+      ],
+      "featured": true,
+      "position": 3,
+      "is_published": true,
+      "summary": "An analysis of how rainfall in Karnataka moved away from normal, paired with a dashboard that includes a forecast.",
+      "problem": "Rainfall swung well away from normal in consecutive years, which made the underlying risk easy to miss.",
+      "solution": "Analysed rainfall variation against normal levels and built a dashboard with forecasting capabilities.",
+      "details": "",
+      "technologies": [
+        "Python",
+        "Pandas",
+        "NumPy"
+      ],
+      "features": [
+        "Rainfall variation measured against normal levels",
+        "Forecasting within the dashboard",
+        "Year-by-year comparison of observed rainfall"
+      ],
+      "outcomes": [
+        "-24% rainfall variation in 2023",
+        "+19% rainfall variation in 2024",
+        "71% lower forecast error",
+        "Forecast within 4.1% of 2025 actual"
+      ],
+      "github_url": null,
+      "live_url": "https://splendid-pavlova-0cb359.netlify.app/"
+    },
+    {
+      "title": "Ground Reality of School Education in India",
+      "legacy_titles": [
+        "Ground Reality of School Education in India"
+      ],
+      "categories": [
+        "Data Analytics"
+      ],
+      "modes": [
+        "data"
+      ],
+      "featured": true,
+      "position": 4,
+      "is_published": true,
+      "summary": "Cleaning and comparing UDISE+ school-education data for 36 states and union territories between 2023 and 2025.",
+      "problem": "UDISE+ data for 36 states and union territories (2023 to 2025) was scattered and hard to compare.",
+      "solution": "Cleaned the data, built datasets for analysis, and produced state rankings and yearly trend analysis in a dashboard.",
+      "details": "",
+      "technologies": [
+        "Python",
+        "Pandas",
+        "Matplotlib"
+      ],
+      "features": [
+        "Cleaned datasets",
+        "State rankings",
+        "Yearly trend analysis"
+      ],
+      "outcomes": [
+        "Covers 36 states and union territories, 2023 to 2025"
+      ],
+      "github_url": null,
+      "live_url": "https://helpful-clafoutis-b6a497.netlify.app/"
+    },
+    {
+      "title": "Gender Pay Equality Analysis",
+      "legacy_titles": [
+        "Gender Pay Equality Analysis"
+      ],
+      "categories": [
+        "Data Analytics"
+      ],
+      "modes": [
+        "data"
+      ],
+      "featured": true,
+      "position": 5,
+      "is_published": true,
+      "summary": "An analysis of pay differences across departments and job levels, with dashboards and recommendations.",
+      "problem": "Gender-based pay gaps across departments and job levels needed to be visible and measurable.",
+      "solution": "Analysed pay differences across departments and job levels, and developed dashboards with recommendations to improve pay equity.",
+      "details": "",
+      "technologies": [
+        "Excel",
+        "Power BI"
+      ],
+      "features": [
+        "Pay comparisons across departments",
+        "Analysis by job level",
+        "Dashboards with recommendations"
+      ],
+      "outcomes": [],
+      "github_url": null,
+      "live_url": null
+    },
+    {
+      "title": "Sales Analysis",
+      "legacy_titles": [
+        "Retail Sales Performance Dashboard"
+      ],
+      "categories": [
+        "Data Analytics"
+      ],
+      "modes": [
+        "data"
+      ],
+      "featured": true,
+      "position": 6,
+      "is_published": true,
+      "summary": "An interactive Power BI dashboard that replaced slow manual sales reporting with KPI tracking, trends and regional comparisons.",
+      "problem": "Sales across regions and products were tracked through slow manual reports.",
+      "solution": "Developed an interactive dashboard with KPI tracking, trends and regional comparisons to replace manual reporting.",
+      "details": "",
+      "technologies": [
+        "Power BI",
+        "DAX",
+        "Excel"
+      ],
+      "features": [
+        "KPI tracking",
+        "Sales trend analysis",
+        "Regional comparisons"
+      ],
+      "outcomes": [],
+      "github_url": null,
+      "live_url": "https://astounding-raindrop-7d2b59.netlify.app/"
+    },
+    {
+      "title": "Retail Sales Data Analysis – Forage Job Simulation",
+      "categories": [
+        "Data Analytics"
+      ],
+      "modes": [
+        "data"
+      ],
+      "featured": true,
+      "position": 7,
+      "is_published": true,
+      "summary": "A retail sales data analysis project completed as part of a Forage job simulation.",
+      "problem": "",
+      "solution": "",
+      "details": "",
+      "technologies": [],
+      "features": [],
+      "outcomes": [],
+      "github_url": null,
+      "live_url": null
+    },
+    {
+      "title": "Siksha: Interactive Digital Learning Platform",
+      "categories": [
+        "Full Stack Development"
+      ],
+      "modes": [
+        "python"
+      ],
+      "featured": false,
+      "position": 8,
+      "is_published": false,
+      "summary": "A full-stack learning platform with separate student and teacher modules, quizzes, progress tracking and IoT-enabled smart classroom features.",
+      "problem": "Government school students had limited access to interactive digital learning resources and technology-driven classrooms.",
+      "solution": "Developed a full-stack web application with dedicated student and teacher modules, interactive quizzes, progress tracking, digital learning content and IoT-enabled smart classroom features.",
+      "details": "",
+      "technologies": [
+        "Python",
+        "Flask",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "SQL",
+        "IoT"
+      ],
+      "features": [
+        "Separate student and teacher modules",
+        "Interactive quizzes",
+        "Progress tracking",
+        "Digital learning content",
+        "IoT-enabled smart classroom features"
+      ],
+      "outcomes": [],
+      "github_url": null,
+      "live_url": null
+    }
+  ],
+  "skill_categories": [
+    {
+      "name": "Programming",
+      "modes": [
+        "python",
+        "data"
+      ],
+      "position": 0,
+      "skills": [
+        "Python",
+        "SQL"
+      ]
+    },
+    {
+      "name": "Backend",
+      "modes": [
+        "python"
+      ],
+      "position": 1,
+      "skills": [
+        "Flask",
+        "REST APIs"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "modes": [
+        "python"
+      ],
+      "position": 2,
+      "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ]
+    },
+    {
+      "name": "Databases",
+      "modes": [
+        "python"
+      ],
+      "position": 3,
+      "skills": [
+        "PostgreSQL",
+        "SQLite"
+      ]
+    },
+    {
+      "name": "Data Analytics",
+      "modes": [
+        "data"
+      ],
+      "position": 4,
+      "skills": [
+        "Excel",
+        "Power BI",
+        "DAX",
+        "Data Cleaning",
+        "Exploratory Data Analysis",
+        "Data Visualization"
+      ]
+    },
+    {
+      "name": "Python Libraries",
+      "modes": [
+        "data",
+        "python"
+      ],
+      "position": 5,
+      "skills": [
+        "Pandas",
+        "NumPy",
+        "Matplotlib"
+      ]
+    },
+    {
+      "name": "AI & Machine Learning",
+      "modes": [
+        "python",
+        "data"
+      ],
+      "position": 6,
+      "skills": [
+        "Generative AI",
+        "Prompt Engineering",
+        "RAG",
+        "TensorFlow/Keras",
+        "CNN"
+      ]
+    },
+    {
+      "name": "AI Tools",
+      "modes": [
+        "data"
+      ],
+      "position": 7,
+      "skills": [
+        "Claude",
+        "GPT",
+        "Gemini"
+      ]
+    },
+    {
+      "name": "Tools",
+      "modes": [
+        "python",
+        "data"
+      ],
+      "position": 8,
+      "skills": [
+        "VS Code",
+        "PyCharm",
+        "Jupyter Notebook",
+        "Git",
+        "GitHub"
+      ]
+    },
+    {
+      "name": "Core Skills",
+      "modes": [
+        "python",
+        "data"
+      ],
+      "position": 9,
+      "skills": [
+        "Data Structures",
+        "Problem Solving",
+        "Team Collaboration",
+        "Communication",
+        "Time Management"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "organization": "Vtricks Technologies",
+      "role": "Data Analyst Intern",
+      "location": "Bengaluru (Hybrid)",
+      "employment_type": "Internship",
+      "start_label": "Aug 2026",
+      "end_label": "Present",
+      "position": 0,
+      "responsibilities": [
+        "Working with Python, Pandas and NumPy on data analysis projects.",
+        "Data cleaning and validation.",
+        "Exploratory data analysis.",
+        "Data visualization.",
+        "Generative AI-assisted analysis and insight generation."
+      ]
+    },
+    {
+      "organization": "She Can Foundation",
+      "role": "Python Developer Intern",
+      "location": "Remote",
+      "employment_type": "Internship",
+      "start_label": "Aug 2026",
+      "end_label": "",
+      "position": 1,
+      "responsibilities": [
+        "Developed Python-based automated solutions and self-contained applications to support digital initiatives at a registered NGO.",
+        "Worked with Python and Flask to build and implement application solutions."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "S. G. Balekundri Institute of Technology",
+      "qualification": "B.E. in Computer Science & Engineering",
+      "location": "Belagavi",
+      "period": "Expected 2027",
+      "details": "",
+      "position": 0
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Git & GitHub",
+      "issuer": "Simplilearn",
+      "issued_label": "",
+      "position": 0
+    },
+    {
+      "name": "Analyzing and Visualizing Data with Microsoft Power BI",
+      "issuer": "Simplilearn",
+      "issued_label": "",
+      "position": 1
+    },
+    {
+      "name": "Python Programming",
+      "issuer": "OneRoadmap",
+      "issued_label": "",
+      "position": 2
+    },
+    {
+      "name": "SQL",
+      "issuer": "OneRoadmap",
+      "issued_label": "",
+      "position": 3
+    },
+    {
+      "name": "Excel",
+      "issuer": "OneRoadmap",
+      "issued_label": "",
+      "position": 4
+    },
+    {
+      "name": "Foundations of Prompt Engineering",
+      "issuer": "AWS",
+      "issued_label": "",
+      "position": 5
+    },
+    {
+      "name": "Essentials of Prompt Engineering",
+      "issuer": "AWS",
+      "issued_label": "",
+      "position": 6
+    },
+    {
+      "name": "Data Science & ML",
+      "issuer": "Udemy",
+      "issued_label": "",
+      "position": 7
+    },
+    {
+      "name": "Deloitte Australia Data Analytics Job Simulation",
+      "issuer": "Forage",
+      "issued_label": "February 2026",
+      "position": 8
+    },
+    {
+      "name": "Tata Data Visualization: Empowering Business with Effective Insights Job Simulation",
+      "issuer": "Forage",
+      "issued_label": "February 2026",
+      "position": 9
+    }
+  ]
+}

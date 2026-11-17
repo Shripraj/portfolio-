@@ -1,97 +1,33 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en" data-theme="{{ default_theme or 'light' }}">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{{ site_name|default('Shridhar Patil') }} — Python Developer & Data Analyst{% endblock %}</title>
-<meta name="description" content="Portfolio of Shridhar Patil — Computer Science Engineering student, Python developer and data analyst specializing in Flask, SQL, and Power BI.">
-<meta name="keywords" content="Shridhar Patil, Python Developer, Data Analyst, Flask Developer, Portfolio, CSE Student">
-<meta name="author" content="Shridhar Patil">
-<meta property="og:title" content="Shridhar Patil — Python Developer & Data Analyst">
-<meta property="og:description" content="Computer Science Engineering student building Python applications and data-driven insights.">
-<meta property="og:type" content="website">
-
-<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
-
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<!-- AOS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-
-<!-- App CSS -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
-{% block extra_css %}{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page_title }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ meta_description }}{% endblock %}">
+  {% if keywords %}<meta name="keywords" content="{{ keywords }}">{% endif %}
+  <meta name="author" content="{{ profile.name }}">
+  <meta name="theme-color" content="#F5F2EB">
+  <link rel="canonical" href="{{ canonical or (request.host_url.rstrip('/') ~ request.path) }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{{ page_title }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ meta_description }}{% endblock %}">
+  <meta property="og:url" content="{{ canonical or '' }}">
+  {% if profile.photo %}<meta property="og:image" content="{{ profile.photo.url }}">{% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <script src="{{ url_for('static', filename='js/theme-init.js') }}"></script>
+  {% if profile.name %}<script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "Person", "name": profile.name, "jobTitle": profile.primary_title, "address": profile.location, "sameAs": [profile.linkedin_url, profile.github_url] | select | list, "url": canonical or ""} | tojson }}</script>{% endif %}
 </head>
-<body>
-
-<!-- Loading Screen -->
-<div id="loading-screen">
-  <div class="loader-mark">
-    <span>&lt;</span><span class="loader-slash">/</span><span>&gt;</span>
-  </div>
-  <div class="loader-text">booting portfolio<span class="dots">...</span></div>
-</div>
-
-<!-- Custom cursor -->
-<div class="cursor-dot" id="cursor-dot"></div>
-<div class="cursor-ring" id="cursor-ring"></div>
-
-<!-- Scroll progress -->
-<div class="scroll-progress"><div class="scroll-progress-bar" id="scroll-progress-bar"></div></div>
-
-<!-- Flash messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  <div class="flash-stack" id="flash-stack">
-    {% for category, message in messages %}
-    <div class="flash-item flash-{{ category }}">
-      <span>{{ message }}</span>
-      <button class="flash-close" aria-label="Dismiss">&times;</button>
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-{% endwith %}
-
-{% block content %}{% endblock %}
-
-<!-- Glass view modal (used by certificate / resume "View" buttons) -->
-<div class="glass-modal-backdrop" id="glass-modal-backdrop">
-  <div class="glass-modal glass" id="glass-modal">
-    <div class="glass-modal-head">
-      <span class="glass-modal-title" id="glass-modal-title"></span>
-      <button class="glass-modal-close" id="glass-modal-close" aria-label="Close">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <div class="glass-modal-body" id="glass-modal-body">
-      <div class="glass-modal-loader"><i class="fa-solid fa-spinner fa-spin"></i></div>
-    </div>
-  </div>
-</div>
-
-<!-- Back to top -->
-<button id="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
-
-{% if social is defined %}
-<!-- Floating social buttons -->
-<div class="floating-social">
-  <a href="{{ social.github }}" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-  <a href="{{ social.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-  <a href="mailto:{{ social.email }}" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
-</div>
-{% endif %}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
-{% block extra_js %}{% endblock %}
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% block header %}{% endblock %}
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  {% block footer %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
 </body>
 </html>

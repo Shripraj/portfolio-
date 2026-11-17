@@ -1,9 +1,5 @@
+instance/
 __pycache__/
 *.pyc
-venv/
-.venv/
-env/
 .env
-.DS_Store
-*.log
-
+.pytest_cache/
