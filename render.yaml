@@ -6,7 +6,7 @@ services:
     pythonVersion: "3.12.8"
     buildCommand: pip install -r requirements.txt
     # Create tables and load content (safe to repeat), then start the site.
-    startCommand: flask seed && gunicorn api.wsgi:app --workers 1 --threads 8 --bind 0.0.0.0:$PORT
+    startCommand: flask seed && flask sync-catalogue && gunicorn api.wsgi:app --workers 1 --threads 8 --bind 0.0.0.0:$PORT
     healthCheckPath: /api/health
     disk:
       name: portfolio-data
